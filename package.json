@@ -1,0 +1,16 @@
+{
+  "license": "proprietary",
+  "name": "code-challenge",
+  "packageManager": "yarn@4.0.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "run-app": "tsc && node build/index.js",
+    "generate-editor-sdks": "sdks vscode"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@yarnpkg/sdks": "^3.1.0",
+    "typescript": "^5.3.3"
+  }
+}
