@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd ../
+
+podman \
+    build \
+        --tag "localhost/code-challenge/game" \
+        .
