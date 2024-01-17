@@ -12,7 +12,7 @@ interface ShipPosition {
 const prompt = promptSync();
 
 function randomNumber(max: number): number {
-  return Math.floor(Math.random() * max);
+  return Math.floor(Math.random() * (max - 1)) + 1;
 }
 
 function generateShipPosition(): ShipPosition {
@@ -33,7 +33,7 @@ function readUserGuess(): ShipPosition {
 }
 
 function calculateDistance(a: ShipPosition, b: ShipPosition): number {
-  return Math.abs((a.x - b.x) + (a.y - b.y));
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
 
 function findShortestDistance(distances: number[]): number {
@@ -89,16 +89,18 @@ function setupGame(numberOfShips: number) {
 function runGame(shipPositions: ShipPosition[], guessLimit: number): boolean {
   let guessCount = 0;
   
-  while (guessCount < guessLimit || shipPositions.length != 0) {
+  while (guessCount < guessLimit && shipPositions.length != 0) {
     const survivedShips: ShipPosition[] = [];
     const distances: number[] = [];
-    let hasHit = false;
+    let hasHitInRound = false;
 
     const userGuess = readUserGuess();
     
     for (const shipPosition of shipPositions) {
       const distance = calculateDistance(shipPosition, userGuess);
       const hasHit = isHit(distance);
+
+      hasHitInRound ||= hasHit;
       
       if (hasHit) {
         continue;
@@ -107,11 +109,18 @@ function runGame(shipPositions: ShipPosition[], guessLimit: number): boolean {
       distances.push(distance);
       survivedShips.push(shipPosition);
     }
+
+    shipPositions = survivedShips;
+
+    if (hasHitInRound) {
+      console.log('Hit');
+      continue;
+    }
     
     const shortestDistance = findShortestDistance(distances);
     console.log(distanceToProximity(shortestDistance));
-    
-    shipPositions = survivedShips;
+
+    guessCount += 1;
   }
   
   return shipPositions.length == 0;
